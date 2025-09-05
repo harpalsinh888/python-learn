@@ -48,7 +48,7 @@ def get_instagram_video(url):
         res = requests.get(API_URL + url, headers=headers)
         data = res.json()
         return data.get("media")
-    except Exception as e:
+    except Exception:
         return None
 
 @app.route("/", methods=["GET", "POST"])
