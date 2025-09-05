@@ -7,7 +7,7 @@ app = Flask(_name_)
 RAPIDAPI_KEY = "YOUR_RAPIDAPI_KEY"
 API_URL = "https://instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com/?url="
 
-HTML = """
+<html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +37,7 @@ HTML = """
   {% endif %}
 </body>
 </html>
-"""
+
 
 def get_instagram_video(url):
     headers = {
@@ -64,4 +64,5 @@ def home():
 
 if _name_ == "_main_":
     app.run(host="0.0.0.0", port=5000)
+
 
