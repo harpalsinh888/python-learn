@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import instaloader
 
-app = Flask(_name_)
+app = Flask(__name__)
 L = instaloader.Instaloader()
 
 @app.route('/')
@@ -25,5 +25,6 @@ def download():
     except Exception as e:
         return f"❌ Error: {str(e)}"
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(debug=True)
+
