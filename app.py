@@ -2,53 +2,81 @@ from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
-# HTML template
+# Modern HTML Template
 HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Calculator</title>
+    <title>Modern Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            background: white;
-            width: 300px;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        h2 {
+            color: #333333;
+            margin-bottom: 20px;
+            font-size: 28px;
+            letter-spacing: 1px;
         }
         input, select, button {
             width: 90%;
-            padding: 10px;
-            margin: 8px 0;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
             font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 8px rgba(102,126,234,0.3);
         }
         button {
-            background: #4CAF50;
+            background: #667eea;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: 0.3s;
         }
         button:hover {
-            background: #45a049;
+            background: #5a67d8;
+            transform: scale(1.05);
         }
-        h2 {
-            margin-bottom: 15px;
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #444;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Simple Calculator</h2>
+        <h2>🔢 Modern Calculator</h2>
         <form method="POST">
             <input type="number" name="num1" step="any" placeholder="Enter first number" required><br>
             <input type="number" name="num2" step="any" placeholder="Enter second number" required><br>
@@ -61,7 +89,7 @@ HTML = """
             <button type="submit">Calculate</button>
         </form>
         {% if result is not none %}
-            <h3>Result: {{ result }}</h3>
+            <div class="result">Result: {{ result }}</div>
         {% endif %}
     </div>
 </body>
@@ -91,4 +119,3 @@ def calculator():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
