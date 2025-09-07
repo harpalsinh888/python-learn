@@ -1,121 +1,140 @@
-from flask import Flask, render_template_string, request
+from flask import Flask, render_template_string
 
 app = Flask(__name__)
 
-# Modern HTML Template
 HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Modern Calculator</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            width: 350px;
-            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
-            text-align: center;
-            animation: fadeIn 1s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from {opacity: 0; transform: translateY(-20px);}
-            to {opacity: 1; transform: translateY(0);}
-        }
-        h2 {
-            color: #333333;
-            margin-bottom: 20px;
-            font-size: 28px;
-            letter-spacing: 1px;
-        }
-        input, select, button {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
-        }
-        input:focus, select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 8px rgba(102,126,234,0.3);
-        }
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-        button:hover {
-            background: #5a67d8;
-            transform: scale(1.05);
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #444;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Mobile Style Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    .calculator {
+      background: #111827;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
+      width: 300px;
+    }
+    .screen {
+      width: 100%;
+      height: 60px;
+      background: #0f172a;
+      color: white;
+      font-size: 28px;
+      border: none;
+      text-align: right;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 20px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      background: #1e293b;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #334155;
+      transform: scale(1.05);
+    }
+    .equal {
+      background: #4ade80;
+      color: black;
+      font-weight: bold;
+    }
+    .equal:hover {
+      background: #22c55e;
+    }
+    .operator {
+      background: #f97316;
+      color: white;
+      font-weight: bold;
+    }
+    .operator:hover {
+      background: #ea580c;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>🔢 Modern Calculator</h2>
-        <form method="POST">
-            <input type="number" name="num1" step="any" placeholder="Enter first number" required><br>
-            <input type="number" name="num2" step="any" placeholder="Enter second number" required><br>
-            <select name="operation" required>
-                <option value="add">Addition (+)</option>
-                <option value="subtract">Subtraction (-)</option>
-                <option value="multiply">Multiplication (*)</option>
-                <option value="divide">Division (/)</option>
-            </select><br>
-            <button type="submit">Calculate</button>
-        </form>
-        {% if result is not none %}
-            <div class="result">Result: {{ result }}</div>
-        {% endif %}
+  <div class="calculator">
+    <input type="text" class="screen" id="screen" disabled>
+    <div class="buttons">
+      <button onclick="clearScreen()">C</button>
+      <button onclick="appendValue('/')">÷</button>
+      <button onclick="appendValue('*')">×</button>
+      <button onclick="backspace()">⌫</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button onclick="appendValue('-')" class="operator">-</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button onclick="appendValue('+')" class="operator">+</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button onclick="calculate()" class="equal">=</button>
+
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
     </div>
+  </div>
+
+  <script>
+    const screen = document.getElementById('screen');
+
+    function appendValue(value) {
+      screen.value += value;
+    }
+
+    function clearScreen() {
+      screen.value = '';
+    }
+
+    function backspace() {
+      screen.value = screen.value.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        screen.value = eval(screen.value);
+      } catch {
+        screen.value = 'Error';
+      }
+    }
+  </script>
 </body>
 </html>
 """
 
-@app.route("/", methods=["GET", "POST"])
-def calculator():
-    result = None
-    if request.method == "POST":
-        try:
-            num1 = float(request.form["num1"])
-            num2 = float(request.form["num2"])
-            operation = request.form["operation"]
-
-            if operation == "add":
-                result = num1 + num2
-            elif operation == "subtract":
-                result = num1 - num2
-            elif operation == "multiply":
-                result = num1 * num2
-            elif operation == "divide":
-                result = "Error: Division by zero" if num2 == 0 else num1 / num2
-        except:
-            result = "Invalid input!"
-    return render_template_string(HTML, result=result)
+@app.route("/")
+def home():
+    return render_template_string(HTML)
 
 if __name__ == "__main__":
     app.run(debug=True)
+
